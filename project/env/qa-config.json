@@ -1,0 +1,29 @@
+{
+  "variables" : [
+    {
+      "name" : "psql_host",
+      "value" : "localhost",
+      "description" : ""
+    },
+    {
+      "name" : "psql_user",
+      "value" : "postgres",
+      "description" : ""
+    },
+    {
+      "name" : "psql_pwd",
+      "value" : "1234",
+      "description" : ""
+    },
+    {
+      "name" : "psql_db",
+      "value" : "qa",
+      "description" : ""
+    },
+    {
+      "name" : "psql_port",
+      "value" : "5432",
+      "description" : ""
+    }
+  ]
+}
