@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pipeline>
   <info>
-    <name>f01_example</name>
+    <name>01_example</name>
     <name_sync_with_filename>Y</name_sync_with_filename>
     <description/>
     <extended_description/>
@@ -18,6 +18,32 @@
     <modified_date>2026/04/12 14:20:43.387</modified_date>
   </info>
   <notepads>
+    <notepad>
+      <backgroundcolorblue>210</backgroundcolorblue>
+      <backgroundcolorgreen>136</backgroundcolorgreen>
+      <backgroundcolorred>15</backgroundcolorred>
+      <bordercolorblue>250</bordercolorblue>
+      <bordercolorgreen>231</bordercolorgreen>
+      <bordercolorred>200</bordercolorred>
+      <fontbold>N</fontbold>
+      <fontcolorblue>250</fontcolorblue>
+      <fontcolorgreen>231</fontcolorgreen>
+      <fontcolorred>200</fontcolorred>
+      <fontitalic>N</fontitalic>
+      <fontname>.AppleSystemUIFont</fontname>
+      <fontsize>13</fontsize>
+      <height>122</height>
+      <xloc>208</xloc>
+      <yloc>48</yloc>
+      <note>We want to JOIN the orders and customers table. 
+
+Before doing so, it's required to sort the rows of the tables. 
+
+After sorting the tables, we use "Merge Join Transform" to join them.
+
+So, a MERGE JOIN is an option for SQL JOIN in Apache Hop.</note>
+      <width>427</width>
+    </notepad>
   </notepads>
   <order>
     <hop>
@@ -41,6 +67,58 @@
       <enabled>Y</enabled>
     </hop>
   </order>
+  <transform>
+    <name>customers_table</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>north</connection>
+    <execute_each_row>N</execute_each_row>
+    <limit>0</limit>
+    <sql>SELECT
+  customer_id
+, company_name
+FROM "public".customers
+</sql>
+    <variables_active>N</variables_active>
+    <attributes/>
+    <GUI>
+      <xloc>224</xloc>
+      <yloc>416</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>joining_tables</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <keys_1>
+      <key>customer_id</key>
+    </keys_1>
+    <keys_2>
+      <key>customer_id</key>
+    </keys_2>
+    <transform1>sort_orders</transform1>
+    <transform2>sort_curtomers</transform2>
+    <attributes/>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>320</yloc>
+    </GUI>
+  </transform>
   <transform>
     <name>orders_table</name>
     <type>TableInput</type>
@@ -75,68 +153,8 @@ FROM "public".orders
     <variables_active>N</variables_active>
     <attributes/>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>96</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>customers_table</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>north</connection>
-    <execute_each_row>N</execute_each_row>
-    <limit>0</limit>
-    <sql>SELECT
-  customer_id
-, company_name
-FROM "public".customers
-</sql>
-    <variables_active>N</variables_active>
-    <attributes/>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>288</yloc>
-    </GUI>
-  </transform>
-  <transform>
-    <name>sort_orders</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compress>N</compress>
-    <compress_variables/>
-    <directory>${java.io.tmpdir}</directory>
-    <fields>
-      <field>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <name>customer_id</name>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <free_memory/>
-    <sort_prefix>out</sort_prefix>
-    <sort_size>1000000</sort_size>
-    <unique_rows>N</unique_rows>
-    <attributes/>
-    <GUI>
-      <xloc>288</xloc>
-      <yloc>96</yloc>
+      <xloc>224</xloc>
+      <yloc>224</yloc>
     </GUI>
   </transform>
   <transform>
@@ -151,7 +169,6 @@ FROM "public".customers
       <schema_name/>
     </partitioning>
     <compress>N</compress>
-    <compress_variables/>
     <directory>${java.io.tmpdir}</directory>
     <fields>
       <field>
@@ -163,19 +180,18 @@ FROM "public".customers
         <presorted>N</presorted>
       </field>
     </fields>
-    <free_memory/>
     <sort_prefix>out</sort_prefix>
     <sort_size>1000000</sort_size>
     <unique_rows>N</unique_rows>
     <attributes/>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>288</yloc>
+      <xloc>384</xloc>
+      <yloc>416</yloc>
     </GUI>
   </transform>
   <transform>
-    <name>joining_tables</name>
-    <type>MergeJoin</type>
+    <name>sort_orders</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -184,19 +200,25 @@ FROM "public".customers
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <join_type>INNER</join_type>
-    <keys_1>
-      <key>customer_id</key>
-    </keys_1>
-    <keys_2>
-      <key>customer_id</key>
-    </keys_2>
-    <transform1>sort_orders</transform1>
-    <transform2>sort_curtomers</transform2>
+    <compress>N</compress>
+    <directory>${java.io.tmpdir}</directory>
+    <fields>
+      <field>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <name>customer_id</name>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <sort_prefix>out</sort_prefix>
+    <sort_size>1000000</sort_size>
+    <unique_rows>N</unique_rows>
     <attributes/>
     <GUI>
-      <xloc>464</xloc>
-      <yloc>192</yloc>
+      <xloc>368</xloc>
+      <yloc>224</yloc>
     </GUI>
   </transform>
   <transform_error_handling>
